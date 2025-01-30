@@ -1,0 +1,495 @@
+// NMEC: 113626
+
+#1 Encontre todos os atores que dirigiram um filme em que também atuaram e apresente o nome do ator e o título do filme.
+
+match (p:Person)-[:DIRECTED]->(m:Movie)<-[:ACTED_IN]-(p2:Person)
+where p=p2
+return distinct p.name as Name, m.title as Movie_Title
+
+╒════════════════╤═══════════════════╕
+│Name            │Movie_Title        │
+╞════════════════╪═══════════════════╡
+│"Tom Hanks"     │"That Thing You Do"│
+├────────────────┼───────────────────┤
+│"Clint Eastwood"│"Unforgiven"       │
+├────────────────┼───────────────────┤
+│"Danny DeVito"  │"Hoffa"            │
+└────────────────┴───────────────────┘
+
+# 2. Para cada filme realizado depois de 2005, apresente os nomes de todos os atores que atuaram nesse filme.
+
+match (m:Movie)<-[:ACTED_IN]-(p:Person)
+where m.released > 2005
+return  m.title as Movie_Title, collect(p.name) as Atores
+
+╒══════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│Movie_Title           │Atores                                                                │
+╞══════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│"RescueDawn"          │["Zach Grenier", "Steve Zahn", "Christian Bale", "Marshall Bell"]     │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Cloud Atlas"         │["Tom Hanks", "Jim Broadbent", "Halle Berry", "Hugo Weaving"]         │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"The Da Vinci Code"   │["Tom Hanks", "Ian McKellen", "Audrey Tautou", "Paul Bettany"]        │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"V for Vendetta"      │["John Hurt", "Stephen Rea", "Natalie Portman", "Hugo Weaving", "Ben M│
+│                      │iles"]                                                                │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Speed Racer"         │["Emile Hirsch", "Rain", "Christina Ricci", "Ben Miles", "Susan Sarand│
+│                      │on", "John Goodman", "Matthew Fox"]                                   │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Ninja Assassin"      │["Rain", "Ben Miles", "Rick Yune", "Naomie Harris"]                   │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Frost/Nixon"         │["Sam Rockwell", "Michael Sheen", "Frank Langella", "Oliver Platt", "K│
+│                      │evin Bacon"]                                                          │
+├──────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Charlie Wilson's War"│["Julia Roberts", "Tom Hanks", "Philip Seymour Hoffman"]              │
+└──────────────────────┴──────────────────────────────────────────────────────────────────────┘
+
+# 3. Encontre pares de nós com mais do que uma relação entre si.
+
+match (m)-[r]->(n)
+with m,n,count(r) as Relations_Number
+where Relations_Number>1
+return m,n,Relations_Number
+
+╒══════════════════════════════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│x                                             │y                                                                     │
+╞══════════════════════════════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│(:Person {born: 1961,name: "Aaron Sorkin"})   │(:Movie {tagline: "In the heart of the nation's capital, in a courthou│
+│                                              │se of the U.S. government, one man will stop at nothing to keep his ho│
+│                                              │nor, and one will stop at nothing to find the truth.",title: "A Few Go│
+│                                              │od Men",released: 1992})                                              │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1957,name: "Cameron Crowe"})  │(:Movie {tagline: "The rest of his life begins now.",title: "Jerry Mag│
+│                                              │uire",released: 2000})                                                │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1947,name: "Rob Reiner"})     │(:Movie {tagline: "Can two friends sleep together and still love each │
+│                                              │other in the morning?",title: "When Harry Met Sally",released: 1998}) │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1941,name: "Nora Ephron"})    │(:Movie {tagline: "Can two friends sleep together and still love each │
+│                                              │other in the morning?",title: "When Harry Met Sally",released: 1998}) │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1956,name: "Tom Hanks"})      │(:Movie {tagline: "In every life there comes a time when that thing yo│
+│                                              │u dream becomes that thing you do",title: "That Thing You Do",released│
+│                                              │: 1996})                                                              │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1930,name: "Clint Eastwood"}) │(:Movie {tagline: "It's a hell of a thing, killing a man",title: "Unfo│
+│                                              │rgiven",released: 1992})                                              │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1967,name: "Lilly Wachowski"})│(:Movie {tagline: "Freedom! Forever!",title: "V for Vendetta",released│
+│                                              │: 2006})                                                              │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1965,name: "Lana Wachowski"}) │(:Movie {tagline: "Freedom! Forever!",title: "V for Vendetta",released│
+│                                              │: 2006})                                                              │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1967,name: "Lilly Wachowski"})│(:Movie {tagline: "Speed has no limits",title: "Speed Racer",released:│
+│                                              │ 2008})                                                               │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1965,name: "Lana Wachowski"}) │(:Movie {tagline: "Speed has no limits",title: "Speed Racer",released:│
+│                                              │ 2008})                                                               │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1944,name: "Danny DeVito"})   │(:Movie {tagline: "He didn't want law. He wanted justice.",title: "Hof│
+│                                              │fa",released: 1992})                                                  │
+├──────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1949,name: "Nancy Meyers"})   │(:Movie {title: "Something's Gotta Give",released: 2003})             │
+
+# 4. Encontre todos os pares de pessoas que fizeram revisões do mesmo filme. Apresente os seus nomes e título de cada filme.
+
+match (p1:Person)-[:REVIEWED]->(m:Movie)<-[:REVIEWED]-(p2:Person)
+where id(p1)<id(p2)
+return p1.name as Name_Person1, p2.name as Name_Person2, m.title as Movie_Title
+
+╒══════════════════╤══════════════════╤═══════════════════╕
+│Name_Person1      │Name_Person2      │Movie_Title        │
+╞══════════════════╪══════════════════╪═══════════════════╡
+│"Angela Scope"    │"Jessica Thompson"│"The Replacements" │
+├──────────────────┼──────────────────┼───────────────────┤
+│"Angela Scope"    │"James Thompson"  │"The Replacements" │
+├──────────────────┼──────────────────┼───────────────────┤
+│"Jessica Thompson"│"James Thompson"  │"The Replacements" │
+├──────────────────┼──────────────────┼───────────────────┤
+│"Jessica Thompson"│"James Thompson"  │"The Da Vinci Code"│
+└──────────────────┴──────────────────┴───────────────────┘
+
+# 5. Encontre todos os pares de atores que atuaram em vários filmes juntos.
+
+match (p1:Person)-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(p2:Person)
+with p1,p2,count(m) as Num_Movies
+where id(p1)<id(p2) and Num_Movies>1
+return p1.name as Name_Person1, p2.name as Name_Person2, Num_Movies
+
+╒════════════════════╤════════════════════╤══════════╕
+│Name_Person1        │Name_Person2        │Num_Movies│
+╞════════════════════╪════════════════════╪══════════╡
+│"Laurence Fishburne"│"Hugo Weaving"      │3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Carrie-Anne Moss"  │"Hugo Weaving"      │3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Keanu Reeves"      │"Hugo Weaving"      │3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Carrie-Anne Moss"  │"Laurence Fishburne"│3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Keanu Reeves"      │"Laurence Fishburne"│3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Keanu Reeves"      │"Carrie-Anne Moss"  │3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Jack Nicholson"    │"J.T. Walsh"        │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Jack Nicholson"    │"Cuba Gooding Jr."  │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Tom Cruise"        │"Cuba Gooding Jr."  │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Meg Ryan"          │"Tom Hanks"         │3         │
+├────────────────────┼────────────────────┼──────────┤
+│"Tom Hanks"         │"Rosie O'Donnell"   │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Ben Miles"         │"Rain"              │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Tom Hanks"         │"Gary Sinise"       │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Jack Nicholson"    │"Danny DeVito"      │2         │
+├────────────────────┼────────────────────┼──────────┤
+│"Tom Hanks"         │"Bill Paxton"       │2         │
+└────────────────────┴────────────────────┴──────────┘
+
+# 6. Determine a idade média do elenco do filme "Apollo 13" no ano do lançamento do filme.
+
+match (p:Person)-[:ACTED_IN]->(m:Movie)
+where m.title = "Apollo 13"
+return m.title as Movie, avg(m.released - p.born) as Average_Age
+
+╒═══════════╤═══════════╕
+│Movie      │Average_Age│
+╞═══════════╪═══════════╡
+│"Apollo 13"│40.2       │
+└───────────┴───────────┘
+
+# 7. Encontre os 10 filmes com o elenco mais velho no momento do lançamento do filme. Apresente o filme e a idade média arredondada a 2 casas decimais, por ordem decrescente.
+
+match (p:Person)-[:ACTED_IN]->(m:Movie)
+return m.title as Movie, round(avg(m.released - p.born),2) as Average_Age
+order by Average_Age DESC
+Limit 10
+
+╒════════════════════════╤═══════════╕
+│Movie                   │Average_Age│
+╞════════════════════════╪═══════════╡
+│"Unforgiven"            │62.0       │
+├────────────────────────┼───────────┤
+│"Cloud Atlas"           │54.25      │
+├────────────────────────┼───────────┤
+│"Something's Gotta Give"│54.0       │
+├────────────────────────┼───────────┤
+│"The Birdcage"          │50.33      │
+├────────────────────────┼───────────┤
+│"Frost/Nixon"           │49.4       │
+├────────────────────────┼───────────┤
+│"The Polar Express"     │48.0       │
+├────────────────────────┼───────────┤
+│"What Dreams May Come"  │48.0       │
+├────────────────────────┼───────────┤
+│"V for Vendetta"        │47.2       │
+├────────────────────────┼───────────┤
+│"RescueDawn"            │46.75      │
+├────────────────────────┼───────────┤
+│"Snow Falling on Cedars"│46.5       │
+└────────────────────────┴───────────┘
+
+# 8. Apresente o subgrafo ACTED_IN do filme com o elenco mais novo, no momento do lançamento do filme.
+
+match (p:Person)-[r:ACTED_IN]->(m:Movie)
+with round(avg(m.released-p.born), 2) as Average_Age, m
+order by Average_Age
+limit 1
+match (p:Person)-[r:ACTED_IN]->(m)
+return p,r,m
+
+╒════════════════════════════════════════════════╤════════════════════════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│p                                               │r                                       │m                                                                     │
+╞════════════════════════════════════════════════╪════════════════════════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│(:Person {born: 1974,name: "Jerry O'Connell"})  │[:ACTED_IN {roles: ["Vern Tessio"]}]    │(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+├────────────────────────────────────────────────┼────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1970,name: "River Phoenix"})    │[:ACTED_IN {roles: ["Chris Chambers"]}] │(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+├────────────────────────────────────────────────┼────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1942,name: "Marshall Bell"})    │[:ACTED_IN {roles: ["Mr. Lachance"]}]   │(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+├────────────────────────────────────────────────┼────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1972,name: "Wil Wheaton"})      │[:ACTED_IN {roles: ["Gordie Lachance"]}]│(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+├────────────────────────────────────────────────┼────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1966,name: "Kiefer Sutherland"})│[:ACTED_IN {roles: ["Ace Merrill"]}]    │(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+├────────────────────────────────────────────────┼────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1966,name: "John Cusack"})      │[:ACTED_IN {roles: ["Denny Lachance"]}] │(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+├────────────────────────────────────────────────┼────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {born: 1971,name: "Corey Feldman"})    │[:ACTED_IN {roles: ["Teddy Duchamp"]}]  │(:Movie {tagline: "For some, it's the last real taste of innocence, an│
+│                                                │                                        │d the first real taste of life. But for everyone, it's the time that m│
+│                                                │                                        │emories are made of.",title: "Stand By Me",released: 1986})           │
+└────────────────────────────────────────────────┴────────────────────────────────────────┴──────────────────────────────────────────────────────────────────────┘
+
+# 9. Qual é o caminho mais curto (usando qualquer tipo de relação) entre John Cusack e Demi Moore?
+
+match (start:Person {name:"John Cusack"}),(end:Person {name:"Demi Moore"}),
+path=shortestpath((start)-[*]-(end))
+return path
+
+╒══════════════════════════════════════════════════════════════════════╕
+│path                                                                  │
+╞══════════════════════════════════════════════════════════════════════╡
+│(:Person {born: 1966,name: "John Cusack"})-[:ACTED_IN {roles: ["Denny │
+│Lachance"]}]->(:Movie {tagline: "For some, it's the last real taste of│
+│ innocence, and the first real taste of life. But for everyone, it's t│
+│he time that memories are made of.",title: "Stand By Me",released: 198│
+│6})<-[:DIRECTED]-(:Person {born: 1947,name: "Rob Reiner"})-[:DIRECTED]│
+│->(:Movie {tagline: "In the heart of the nation's capital, in a courth│
+│ouse of the U.S. government, one man will stop at nothing to keep his │
+│honor, and one will stop at nothing to find the truth.",title: "A Few │
+│Good Men",released: 1992})<-[:ACTED_IN {roles: ["Lt. Cdr. JoAnne Gallo│
+│way"]}]-(:Person {born: 1962,name: "Demi Moore"})                     │
+└──────────────────────────────────────────────────────────────────────┘
+
+# 10. Qual a dimensão caminho mais curto (usando qualquer tipo de relação) entre Keanu Reeves e Tom Cruise?
+
+match (start:Person {name:"Keanu Reeves"}),(end:Person {name:"Tom Cruise"}),
+path=shortestpath((start)-[*]-(end))
+return length(path) as Dimensao
+
+╒════════╕
+│Dimensao│
+╞════════╡
+│4       │
+└────────┘
+
+# 11. Quais são as dimensões do caminho mais curto entre pessoas com nome Jim e pessoas com nome Kevin?
+
+match path=shortestpath((start)-[*]-(end))
+where start.name starts with "Jim" and end.name starts with "Kevin"
+return length(path) as Dimensao
+
+╒════════╕
+│Dimensao│
+╞════════╡
+│4       │
+├────────┤
+│4       │
+├────────┤
+│4       │
+├────────┤
+│6       │
+└────────┘
+
+# 12. Que pessoas têm uma distância 2 para Jim Cash (a distância entre duas pessoas é o comprimento do caminho mais curto entre eles)?
+
+match (jim_cash:Person {name: "Jim Cash"}), path = shortestpath( (jim_cash)-[*..2]-(p:Person) )
+where jim_cash <> p
+return p.name as Person
+
+╒═════════════════╕
+│Person           │
+╞═════════════════╡
+│"Tom Cruise"     │
+├─────────────────┤
+│"Kelly McGillis" │
+├─────────────────┤
+│"Val Kilmer"     │
+├─────────────────┤
+│"Anthony Edwards"│
+├─────────────────┤
+│"Tom Skerritt"   │
+├─────────────────┤
+│"Meg Ryan"       │
+├─────────────────┤
+│"Tony Scott"     │
+└─────────────────┘
+
+# 13. Qual é a maior distância de uma pessoa para Kevin Bacon?
+
+match (kevin_bacon: Person {name:"Kevin Bacon"}), path = shortestpath((kevin_bacon)-[*]-(p: Person))
+where kevin_bacon <> p
+return length(path) as path_length
+order by path_length DESC
+limit 1
+
+╒═══════════╕
+│path_length│
+╞═══════════╡
+│6          │
+└───────────┘
+
+# 14. Qual é a maior distância entre duas pessoas?
+
+match path = shortestpath((p1)-[*]-(p2: Person))
+where p1 <> p2
+return length(path) as path_length
+order by path_length DESC
+limit 1
+
+╒═══════════╕
+│path_length│
+╞═══════════╡
+│10         │
+└───────────┘
+
+# 15. Qual é a distribuição de distâncias em pares (isto é, para a distância 1, 2, 3, ..., quantos pares de pessoas têm essa distância um do outro)?
+
+match path = shortestpath((p1: Person)-[*]-(p2: Person))
+where id(p1) < id(p2)
+with length(path) as path_length
+order by path_length ASC
+return path_length, count(path_length) as Pair_Distance_Number
+
+╒═══════════╤════════════════════╕
+│path_length│Pair_Distance_Number│
+╞═══════════╪════════════════════╡
+│1          │3                   │
+├───────────┼────────────────────┤
+│2          │638                 │
+├───────────┼────────────────────┤
+│3          │57                  │
+├───────────┼────────────────────┤
+│4          │3124                │
+├───────────┼────────────────────┤
+│5          │123                 │
+├───────────┼────────────────────┤
+│6          │4013                │
+├───────────┼────────────────────┤
+│7          │11                  │
+├───────────┼────────────────────┤
+│8          │805                 │
+├───────────┼────────────────────┤
+│10         │4                   │
+└───────────┴────────────────────┘
+
+# 16. Indique as 10 pessoas com menor distância média em que o caminho entre elas são relações do tipo ACTED_IN.
+
+match path = shortestpath((p1: Person)-[:ACTED_IN*]-(p2: Person))
+where p1<>p2
+with p1, length(path) as path_length
+return p1.name, avg(path_length) as Average_Path_Length
+order by Average_Path_Length ASC
+limit 10
+
+╒══════════════════╤═══════════════════╕
+│p1.name           │Average_Path_Length│
+╞══════════════════╪═══════════════════╡
+│"Tom Hanks"       │3.7821782178217833 │
+├──────────────────┼───────────────────┤
+│"Kevin Bacon"     │4.376237623762377  │
+├──────────────────┼───────────────────┤
+│"Cuba Gooding Jr."│4.514851485148515  │
+├──────────────────┼───────────────────┤
+│"Jack Nicholson"  │4.554455445544554  │
+├──────────────────┼───────────────────┤
+│"Bonnie Hunt"     │4.574257425742573  │
+├──────────────────┼───────────────────┤
+│"Meg Ryan"        │4.594059405940594  │
+├──────────────────┼───────────────────┤
+│"Greg Kinnear"    │4.653465346534655  │
+├──────────────────┼───────────────────┤
+│"Tom Cruise"      │4.6930693069306955 │
+├──────────────────┼───────────────────┤
+│"Hugo Weaving"    │4.732673267326734  │
+├──────────────────┼───────────────────┤
+│"Helen Hunt"      │4.811881188118813  │
+└──────────────────┴───────────────────┘
+
+# 17. Apresente os atores que tiveram pelo menos uma role para personagens com o prefixo 'Dr.'. O resultado deve ser uma lista com o par “Ator, Lista das roles”.
+
+match (p:Person)-[r:ACTED_IN]->(m:Movie)
+where any(role in r.roles where role starts with "Dr.")
+with p, collect([role in r.roles where role starts with "Dr."]) as Lista_Das_Roles
+return p.name as Ator, Lista_Das_Roles
+
+╒═══════════════════╤═════════════════════════════════════════════╕
+│Ator               │Lista_Das_Roles                              │
+╞═══════════════════╪═════════════════════════════════════════════╡
+│"Christopher Guest"│[["Dr. Stone"]]                              │
+├───────────────────┼─────────────────────────────────────────────┤
+│"Tom Hanks"        │[["Dr. Henry Goose"], ["Dr. Robert Langdon"]]│
+├───────────────────┼─────────────────────────────────────────────┤
+│"Helen Hunt"       │[["Dr. Jo Harding"]]                         │
+└───────────────────┴─────────────────────────────────────────────┘
+
+# 18. Apresente as pessoas que tiveram mais do que uma função para pelo menos um filme. Indique a pessoa, a lista de filmes e a lista de relações.
+
+match (p:Person)-[r1]->(m:Movie), (p)-[r2]->(m)
+where r1 <> r2
+return p.name as person, collect(distinct m.title) as movies,
+collect(distinct type(r1)) as Roles
+
+╒═════════════════╤═════════════════════════════════╤═════════════════════════════════╕
+│Person           │Movies                           │Roles                            │
+╞═════════════════╪═════════════════════════════════╪═════════════════════════════════╡
+│"Aaron Sorkin"   │["A Few Good Men"]               │["WROTE", "ACTED_IN"]            │
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Cameron Crowe"  │["Jerry Maguire"]                │["DIRECTED", "WROTE", "PRODUCED"]│
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Nora Ephron"    │["When Harry Met Sally"]         │["WROTE", "PRODUCED"]            │
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Rob Reiner"     │["When Harry Met Sally"]         │["PRODUCED", "DIRECTED"]         │
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Tom Hanks"      │["That Thing You Do"]            │["DIRECTED", "ACTED_IN"]         │
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Clint Eastwood" │["Unforgiven"]                   │["DIRECTED", "ACTED_IN"]         │
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Lana Wachowski" │["V for Vendetta", "Speed Racer"]│["WROTE", "PRODUCED", "DIRECTED"]│
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Lilly Wachowski"│["V for Vendetta", "Speed Racer"]│["WROTE", "PRODUCED", "DIRECTED"]│
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Danny DeVito"   │["Hoffa"]                        │["ACTED_IN", "DIRECTED"]         │
+├─────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│"Nancy Meyers"   │["Something's Gotta Give"]       │["DIRECTED", "PRODUCED", "WROTE"]│
+└─────────────────┴─────────────────────────────────┴─────────────────────────────────┘
+
+# 19. Apresente os 3 filmes que tiveram menor número de pessoas a trabalhar neles, organizados por ordem crescente de número de trabalhadores. Liste o titulo do filme, a lista das pessoas e o numero de pessoas.
+
+match (p:Person)-[r]->(m:Movie)
+with m, collect(p.name) as Staff, COUNT(p) as Staff_Number
+return m.title as Movie, Staff, Staff_Number
+order by Staff_Number ASC
+limit 3;
+
+╒═════════════════════════════════╤══════════════════════════════════════════════════╤════════════╕
+│Movie                            │Staff                                             │Staff_Number│
+╞═════════════════════════════════╪══════════════════════════════════════════════════╪════════════╡
+│"The Polar Express"              │["Tom Hanks", "Robert Zemeckis"]                  │2           │
+├─────────────────────────────────┼──────────────────────────────────────────────────┼────────────┤
+│"One Flew Over the Cuckoo's Nest"│["Danny DeVito", "Jack Nicholson", "Milos Forman"]│3           │
+├─────────────────────────────────┼──────────────────────────────────────────────────┼────────────┤
+│"Cast Away"                      │["Helen Hunt", "Tom Hanks", "Robert Zemeckis"]    │3           │
+└─────────────────────────────────┴──────────────────────────────────────────────────┴────────────┘
+
+# 20. Apresente as 3 pessoas que atuaram em mais filmes e suas respetivas, lista de filmes e lista de roles, ordenadas por ordem decrescente.
+
+match (p:Person)-[r:ACTED_IN]->(m:Movie)
+with p, collect(distinct m.title) as Movies, collect([role in r.roles]) as Roles, count(m) AS Movies_Number
+order by Movies_Number DESC
+LIMIT 3
+RETURN p.name AS Person, Movies_Number, Movies, Roles
+
+╒══════════════╤═════════════╤══════════════════════════════════════════════════════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│Person        │Movies_Number│Movies                                                                │Roles                                                                 │
+╞══════════════╪═════════════╪══════════════════════════════════════════════════════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│"Tom Hanks"   │12           │["You've Got Mail", "Sleepless in Seattle", "Joe Versus the Volcano", │[["Joe Fox"], ["Sam Baldwin"], ["Joe Banks"], ["Mr. White"], ["Zachry"│
+│              │             │"That Thing You Do", "Cloud Atlas", "The Da Vinci Code", "The Green Mi│, "Dr. Henry Goose", "Isaac Sachs", "Dermot Hoggins"], ["Dr. Robert La│
+│              │             │le", "Apollo 13", "Cast Away", "Charlie Wilson's War", "The Polar Expr│ngdon"], ["Paul Edgecomb"], ["Jim Lovell"], ["Chuck Noland"], ["Rep. C│
+│              │             │ess", "A League of Their Own"]                                        │harlie Wilson"], ["Hero Boy", "Father", "Conductor", "Hobo", "Scrooge"│
+│              │             │                                                                      │, "Santa Claus"], ["Jimmy Dugan"]]                                    │
+├──────────────┼─────────────┼──────────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Keanu Reeves"│7            │["The Matrix", "The Matrix Reloaded", "The Matrix Revolutions", "The D│[["Neo"], ["Neo"], ["Neo"], ["Kevin Lomax"], ["Shane Falco"], ["Johnny│
+│              │             │evil's Advocate", "The Replacements", "Johnny Mnemonic", "Something's │ Mnemonic"], ["Julian Mercer"]]                                       │
+│              │             │Gotta Give"]                                                          │                                                                      │
+├──────────────┼─────────────┼──────────────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│"Hugo Weaving"│5            │["The Matrix", "The Matrix Reloaded", "The Matrix Revolutions", "Cloud│[["Agent Smith"], ["Agent Smith"], ["Agent Smith"], ["Bill Smoke", "Ha│
+│              │             │ Atlas", "V for Vendetta"]                                            │skell Moore", "Tadeusz Kesselring", "Nurse Noakes", "Boardman Mephi", │
+│              │             │                                                                      │"Old Georgie"], ["V"]]                                                │
+└──────────────┴─────────────┴──────────────────────────────────────────────────────────────────────┴──────────────────────────────────────────────────────────────────────┘

@@ -1,0 +1,297 @@
+1. List all the writers and the number od songs they wrote.
+match (p:Person)-[r:WROTE]->(s:Song)
+with p, count(r) as Number_Written_Songs
+return p as Writer, Number_Written_Songs
+
+╒══════════════════════════════════════════════════╤════════════════════╕
+│Writer                                            │Number_Written_Songs│
+╞══════════════════════════════════════════════════╪════════════════════╡
+│(:Person {name: "Dylan"})                         │12                  │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Keith Richards"})                │12                  │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Mick Jagger"})                   │12                  │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "John Lennon"})                   │20                  │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Al Cleveland"})                  │1                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Renaldo Benson"})                │1                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Gaye"})                          │3                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Otis Redding"})                  │1                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Mike Love"})                     │2                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Brian Wilson"})                  │7                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Chuck Berry"})                   │1                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Paul McCartney"})                │19                  │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Kurt Cobain"})                   │4                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Charles"})                       │2                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Pete Townshend"})                │4                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Cooke"})                         │3                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Mick Jones"})                    │5                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Joe Strummer"})                  │4                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Hendrix"})                       │4                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+│(:Person {name: "Berry"})                         │5                   │
+├──────────────────────────────────────────────────┼────────────────────┤
+...
+
+2. List all the artists and the list of songs they released.
+match (p:Person)-[r:RELEASED]->(s:Song)
+with p, collect(s.title) as Song_List
+return p as Artist, Song_List
+
+╒═════════════════════════════════════════════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│Artist                                                       │Song_List                                                             │
+╞═════════════════════════════════════════════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│(:Person {name: "Bob Dylan"})                                │["Like a Rolling Stone", "Blowin' in the Wind", "Tangled Up in Blue", │
+│                                                             │"The Times They Are A-Changin", "Knockin on Heavens Door", "Desolation│
+│                                                             │ Row", "Just Like a Woman", "Positively 4th Street", "Mississippi", "S│
+│                                                             │ubterranean Homesick Blues", "Highway 61 Revisited", "Visions of Johan│
+│                                                             │na"]                                                                  │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "The Rolling Stones"})                       │["(I Can't Get No) Satisfaction'", "Sympathy for the Devil", "Gimme Sh│
+│                                                             │elter", "Paint it Black", "Wild Horses", "Ruby Tuesday", "Street Fight│
+│                                                             │ing Man", "Beast of Burden", "Miss You", "Brown Sugar"]               │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "John Lennon"})                              │["Imagine"]                                                           │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "Marvin Gaye"})                              │["What's Going On", "I Heard It Through the Grapevine", "Lets Get It O│
+│                                                             │n", "Sexual Healing"]                                                 │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "Aretha Franklin"})                          │["Respect", "I Never Loved a Man (the Way I Love You)", "Chain of Fool│
+│                                                             │s", "Do Right Woman — Do Right Man"]                                  │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "The Beach Boys"})                           │["Good Vibrations", "God Only Knows", "California Girls", "Dont Worry │
+│                                                             │Baby", "Caroline", "In My Room", "Sloop John B"]                      │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "Chuck Berry"})                              │["Johnny B. Goode", "Maybellene", "Roll Over Beethoven", "Sweet Little│
+│                                                             │ Sixteen", "Brown Eyed Handsome Man"]                                 │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "The Beatles"})                              │["Hey Jude", "Yesterday", "I Want to Hold Your Hand", "Let It Be", "In│
+│                                                             │ My Life", "A Day in the Life", "Help!", "Norwegian Wood (This Bird Ha│
+│                                                             │s Flown)", "Strawberry Fields Forever", "She Loves You", "Please Pleas│
+│                                                             │e Me", "A Hard Days Night", "Come Together", "Cant Buy Me Love", "Some│
+│                                                             │thing", "With a Little Help From My Friends", "Ticket to Ride", "All Y│
+│                                                             │ou Need is Love", "Rain", "Penny Lane"]                               │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "Nirvana"})                                  │["Smells Like Teen Spirit", "In Bloom", "All Apologies", "Come As You │
+│                                                             │Are"]                                                                 │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "Ray Charles"})                              │["What'd I Say", "Georgia on My Mind", "I Cant Stop Loving You", "I Go│
+│                                                             │t a Woman", "Hit the Road Jack"]                                      │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "The Who"})                                  │["My Generation", "I Can See For Miles", "Baba ORiley", "I Cant Explai│
+│                                                             │n"]                                                                   │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "Sam Cooke"})                                │["A Change Is Gonna Come", "Wonderful World", "Cupid"]                │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+│(:Person {name: "The Clash"})                                │["London Calling", "Should I Stay or Should I Go", "Train in Vain", "C│
+│                                                             │omplete Control", "(White Man) In Hammersmith Palais"]                │
+├─────────────────────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────────┤
+...
+
+3. List the 3 artists with the most songs and number of songs they released in descending order.
+match (p:Person)-[r:RELEASED]->(s:Song)
+with p, count(r) as Number_Songs_Released
+return p as Artist, Number_Songs_Released
+order by Number_Songs_Released DESC
+limit 3
+
+╒══════════════════════════════════════╤═════════════════════╕
+│Artist                                │Number_Songs_Released│
+╞══════════════════════════════════════╪═════════════════════╡
+│(:Person {name: "The Beatles"})       │20                   │
+├──────────────────────────────────────┼─────────────────────┤
+│(:Person {name: "Bob Dylan"})         │12                   │
+├──────────────────────────────────────┼─────────────────────┤
+│(:Person {name: "The Rolling Stones"})│10                   │
+└──────────────────────────────────────┴─────────────────────┘
+
+4. List all the pairs of persons that have collaborated in more than one song.
+match (p1:Person)-[r]->(s:Song)<-[]-(p2:Person)
+with p1,p2,count(r) as Number_Songs
+where p1.name < p2.name and Number_Songs>1
+return distinct p1 as Person1, p2 as Person2
+
+╒═════════════════════════════════════════════════════════════╤════════════════════════════════════════════════════╕
+│Person1                                                      │Person2                                             │
+╞═════════════════════════════════════════════════════════════╪════════════════════════════════════════════════════╡
+│(:Person {name: "Bob Dylan"})                                │(:Person {name: "Dylan"})                           │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Dylan"})                                    │(:Person {name: "Tom Wilson"})                      │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Bob Dylan"})                                │(:Person {name: "Tom Wilson"})                      │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Andrew Loog Oldham"})                       │(:Person {name: "Keith Richards"})                  │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Andrew Loog Oldham"})                       │(:Person {name: "Mick Jagger"})                     │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Keith Richards"})                           │(:Person {name: "Mick Jagger"})                     │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Andrew Loog Oldham"})                       │(:Person {name: "The Rolling Stones"})              │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Keith Richards"})                           │(:Person {name: "The Rolling Stones"})              │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "Mick Jagger"})                              │(:Person {name: "The Rolling Stones"})              │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "John Lennon"})                              │(:Person {name: "Yoko Ono"})                        │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "John Lennon"})                              │(:Person {name: "Phil Spector"})                    │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+│(:Person {name: "John Lennon"})                              │(:Person {name: "Lennon"})                          │
+├─────────────────────────────────────────────────────────────┼────────────────────────────────────────────────────┤
+...
+
+5. Get all the songs released by the band "The Beatles".
+match (p1:Person {name: "The Beatles"})-[:RELEASED]->(s:Song)
+return collect(s.title) as Beatles_Songs
+
+╒══════════════════════════════════════════════════════════════════════╕
+│Beatles_Songs                                                         │
+╞══════════════════════════════════════════════════════════════════════╡
+│["Hey Jude", "Yesterday", "I Want to Hold Your Hand", "Let It Be", "In│
+│ My Life", "A Day in the Life", "Help!", "Norwegian Wood (This Bird Ha│
+│s Flown)", "Strawberry Fields Forever", "She Loves You", "Please Pleas│
+│e Me", "A Hard Days Night", "Come Together", "Cant Buy Me Love", "Some│
+│thing", "With a Little Help From My Friends", "Ticket to Ride", "All Y│
+│ou Need is Love", "Rain", "Penny Lane"]                               │
+└──────────────────────────────────────────────────────────────────────┘
+
+6. Find the average number of songs written by writers with two decimal case.
+match (p:Person)-[:WROTE]->(s:Song)
+with p, count(s) as Number_Written_Songs
+return round(avg(Number_Written_Songs),2) as Average_Songs_Written;
+
+╒═════════════════════╕
+│Average_Songs_Written│
+╞═════════════════════╡
+│1.57                 │
+└─────────────────────┘
+
+
+7. List the songs produced by the producer which produced the most songs.
+MATCH (p:Person)-[:PRODUCED]->(s:Song)
+WITH p, count(s) AS Number_Produced
+ORDER BY Number_Produced DESC
+LIMIT 1
+MATCH (p)-[:PRODUCED]->(s:Song)
+RETURN p AS Producer, collect(s.title) AS Produced_Songs;
+
+╒═════════════════════════════════╤══════════════════════════════════════════════════════════════════════╕
+│Producer                         │Produced_Songs                                                        │
+╞═════════════════════════════════╪══════════════════════════════════════════════════════════════════════╡
+│(:Person {name: "George Martin"})│["All You Need is Love", "She Loves You", "I Want to Hold Your Hand", │
+│                                 │"Help!", "Penny Lane", "Rain", "Come Together", "Hey Jude", "Cant Buy │
+│                                 │Me Love", "Strawberry Fields Forever", "Something", "Let It Be", "Norw│
+│                                 │egian Wood (This Bird Has Flown)", "Please Please Me", "A Day in the L│
+│                                 │ife", "Ticket to Ride", "With a Little Help From My Friends", "A Hard │
+│                                 │Days Night", "In My Life", "Yesterday"]                               │
+└─────────────────────────────────┴──────────────────────────────────────────────────────────────────────┘
+
+
+8. Find the total number of songs associated with each type of relationship (WROTE, PRODUCED, RELEASED)
+MATCH (:Person)-[r]->(:Song)
+WITH type(r) AS RelationshipType, count(r) AS TotalSongs
+RETURN RelationshipType, TotalSongs
+ORDER BY TotalSongs DESC;
+
+╒════════════════╤══════════╕
+│RelationshipType│TotalSongs│
+╞════════════════╪══════════╡
+│"WROTE"         │820       │
+├────────────────┼──────────┤
+│"PRODUCED"      │586       │
+├────────────────┼──────────┤
+│"RELEASED"      │450       │
+└────────────────┴──────────┘
+
+
+9. Find songs that were both written and released by the same person
+MATCH (p:Person)-[:WROTE]->(s:Song)<-[:RELEASED]-(p)
+RETURN p.name AS Person, collect(s.title) AS WrittenAndReleasedSongs;
+
+╒═══════════════════════════╤══════════════════════════════════════════════╕
+│Person                     │WrittenAndReleasedSongs                       │
+╞═══════════════════════════╪══════════════════════════════════════════════╡
+│"John Lennon"              │["Imagine"]                                   │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Chuck Berry"              │["Johnny B. Goode"]                           │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Led Zeppelin"             │["Whole Lotta Love"]                          │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Al Green"                 │["Lets Stay Together"]                        │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Little Richard"           │["Long Tall Sally"]                           │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Prince"                   │["When Doves Cry", "1999", "Sign O The Times"]│
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Guns n' Roses"            │["Sweet Child OMine"]                         │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Jay-Z"                    │["99 Problems"]                               │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"M.I.A."                   │["Paper Planes"]                              │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"The Clash"                │["Should I Stay or Should I Go"]              │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Kanye West"               │["Jesus Walks"]                               │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"U2"                       │["Beautiful Day"]                             │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Black Sabbath"            │["Iron Man"]                                  │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Madonna"                  │["Like A Prayer"]                             │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Eric B. and Rakim"        │["Know You Got Soul"]                         │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"R.E.M."                   │["Radio Free Europe"]                         │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Yeah Yeah Yeahs"          │["Maps"]                                      │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Radiohead"                │["Fake Plastic Trees"]                        │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Bee Gees"                 │["How Deep Is Your Love"]                     │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"The Isley Brothers"       │["That Lady (Part 1 and 2)"]                  │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"50 Cent"                  │["In Da Club"]                                │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Green Day"                │["American Idiot"]                            │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"The Notorious B.I.G."     │["Juicy"]                                     │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Coldplay"                 │["Clocks"]                                    │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Beastie Boys"             │["Sabotage"]                                  │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Prince and the Revolution"│["Kiss"]                                      │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Ramones"                  │["Sheena Is a Punk Rocker"]                   │
+├───────────────────────────┼──────────────────────────────────────────────┤
+│"Nirvana"                  │["Come As You Are"]                           │
+└───────────────────────────┴──────────────────────────────────────────────┘
+
+10. Find the song that have the highest number of collaborators (writers, producers, and releasers combined)
+MATCH (p:Person)-[:WROTE|:PRODUCED|:RELEASED]->(s:Song)
+WITH s, count(DISTINCT p) AS Collaborators_Number
+RETURN s.title AS Song, Collaborators_Number
+ORDER BY Collaborators_Number DESC
+LIMIT 1;
+
+╒═════════════════╤════════════════════╕
+│Song             │Collaborators_Number│
+╞═════════════════╪════════════════════╡
+│"Pictures of You"│9                   │
+└─────────────────┴────────────────────┘
